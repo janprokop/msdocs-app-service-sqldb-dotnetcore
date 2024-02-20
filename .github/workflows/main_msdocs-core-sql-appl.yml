@@ -54,6 +54,9 @@ jobs:
           name: rebel-artifact
           path: .
 
+      - name: Get current IP address
+        run: curl ifconfig.me
+
       - name: Deploy to Azure Web App
         id: deploy-to-webapp
         uses: azure/webapps-deploy@v2
