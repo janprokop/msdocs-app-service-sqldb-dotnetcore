@@ -56,5 +56,8 @@ jobs:
           package: .
           publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_66DCEFE223134D7B962D530C424AD955}}
 
+      - name: Install EF core 8.x tools
+        run: dotnet tool install --global dotnet-ef --version 8.*
+
       - name: Generate migration script
         run: dotnet ef migrations script -i -o firstmigration.sql
