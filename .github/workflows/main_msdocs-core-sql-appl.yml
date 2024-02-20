@@ -66,6 +66,5 @@ jobs:
       - name: Azure SQL Deploy
         uses: Azure/sql-action@v2
         with:
-          server-name: ${{ secrets.DB_SERVER }}
           connection-string: ${{ secrets.CONNECTION_STRING }}
-          sql-file: ./sql/migration_script.sql
+          path: ./sql/migration_script.sql
