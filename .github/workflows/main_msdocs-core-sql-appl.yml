@@ -54,9 +54,6 @@ jobs:
           name: rebel-artifact
           path: .
 
-      - name: dir
-        run: ls
-
       - name: Deploy to Azure Web App
         id: deploy-to-webapp
         uses: azure/webapps-deploy@v2
@@ -65,3 +62,10 @@ jobs:
           slot-name: "Production"
           package: ./app
           publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_66DCEFE223134D7B962D530C424AD955}}
+
+      - name: Azure SQL Deploy
+        uses: Azure/sql-action@v1
+        with:
+          server-name: ${{ secrets.DB_SERVER }}
+          connection-string: ${{ secrets.CONNECTION_STRING }}
+          sql-file: ./sql/migration_script.sql
