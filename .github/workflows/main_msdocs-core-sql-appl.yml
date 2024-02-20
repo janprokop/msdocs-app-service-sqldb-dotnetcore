@@ -52,10 +52,10 @@ jobs:
         uses: actions/download-artifact@v3
         with:
           name: rebel-artifact
-          path: ${{env.DOTNET_ROOT}}/publish
+          path: .
 
       - name: dir
-        run: ls ${{env.DOTNET_ROOT}}/publish
+        run: ls
 
       - name: Deploy to Azure Web App
         id: deploy-to-webapp
@@ -63,5 +63,5 @@ jobs:
         with:
           app-name: "rebel-galaxy-wa"
           slot-name: "Production"
-          package: ${{env.DOTNET_ROOT}}/publish/app
+          package: ./app
           publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_66DCEFE223134D7B962D530C424AD955}}
