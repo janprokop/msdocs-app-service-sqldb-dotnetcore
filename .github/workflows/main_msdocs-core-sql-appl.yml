@@ -26,13 +26,19 @@ jobs:
         run: dotnet build --configuration Release
 
       - name: dotnet publish
-        run: dotnet publish "DotNetCoreSqlDb/DotNetCoreSqlDb.csproj" -c Release -o ${{env.DOTNET_ROOT}}/myapp
+        run: dotnet publish "DotNetCoreSqlDb/DotNetCoreSqlDb.csproj" -c Release -o ${{env.DOTNET_ROOT}}/output/app
 
-      - name: Upload artifact for deployment job
+      - name: Install EF core 8.x tools
+        run: dotnet tool install --global dotnet-ef --version 8.*
+
+      - name: Generate migration script
+        run: dotnet ef migrations script -i -o ${{env.DOTNET_ROOT}}/output/sql/migration_script.sql -p "DotNetCoreSqlDb/DotNetCoreSqlDb.csproj"
+
+      - name: Upload web app artifact
         uses: actions/upload-artifact@v3
         with:
-          name: .net-app
-          path: ${{env.DOTNET_ROOT}}/myapp
+          name: rebel-artifact
+          path: ${{env.DOTNET_ROOT}}/output
 
   deploy:
     runs-on: ubuntu-latest
@@ -45,7 +51,11 @@ jobs:
       - name: Download artifact from build job
         uses: actions/download-artifact@v3
         with:
-          name: .net-app
+          name: rebel-artifact
+          path: ${{env.DOTNET_ROOT}}/publish
+
+      - name: dir
+        run: ls ${{env.DOTNET_ROOT}}/publish
 
       - name: Deploy to Azure Web App
         id: deploy-to-webapp
@@ -53,11 +63,5 @@ jobs:
         with:
           app-name: "rebel-galaxy-wa"
           slot-name: "Production"
-          package: .
+          package: ${{env.DOTNET_ROOT}}/publish/app
           publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_66DCEFE223134D7B962D530C424AD955}}
-
-      - name: Install EF core 8.x tools
-        run: dotnet tool install --global dotnet-ef --version 8.*
-
-      - name: Generate migration script
-        run: dotnet ef migrations script -i -o migration_script.sql -p "DotNetCoreSqlDb/DotNetCoreSqlDb.csproj"
