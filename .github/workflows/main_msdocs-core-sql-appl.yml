@@ -66,8 +66,8 @@ jobs:
           package: ./app
           publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_66DCEFE223134D7B962D530C424AD955}}
 
-      - name: Azure SQL Deploy
-        uses: Azure/sql-action@v2
-        with:
-          connection-string: ${{ secrets.CONNECTION_STRING }}
-          path: ./sql/migration_script.sql
+      # - name: Azure SQL Deploy
+      #   uses: Azure/sql-action@v2
+      #   with:
+      #     connection-string: ${{ secrets.CONNECTION_STRING }}
+      #     path: ./sql/migration_script.sql
